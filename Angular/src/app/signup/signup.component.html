@@ -1,1 +1,60 @@
-<p>signup works!</p>
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+
+    <mat-grid-list cols="1" rowHeight="120px">
+        <mat-grid-tile>
+            <img class="header-image" src="/assets/images/music-512.png" routerLink="" />
+            <h1 class="header" routerLink="">Versa</h1>
+        </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-divider></mat-divider>
+
+    <div class="parent">
+    <form class="form" novalidate #loginForm="ngForm" (ngSubmit)="onSubmit()">
+        <h3 class="form-label">Sign up with your email address</h3>
+
+        <mat-dialog-content>
+            <p>
+                <mat-form-field appearance="outline" class="mat-form-field" [style.width.px]=300>
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" placeholder="Enter your email" name="email" [(ngModel)]="user.email" #email="ngModel" required>
+                    <mat-error *ngIf="email.errors?.required">Email is required</mat-error>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="outline" class="mat-form-field" [style.width.px]=300>
+                    <mat-label>Password</mat-label>
+                    <input matInput placeholder="Enter your password" type="password" name="password" [(ngModel)]="user.password" #password="ngModel" required>
+                    <mat-error *ngIf="password.errors?.required">Password is required</mat-error>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="outline" class="mat-form-field" [style.width.px]=300>
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput placeholder="Confirm your password" type="password" name="confirm_password" [(ngModel)]="user.confirm_password" #confirm_password="ngModel" required>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="outline" class="mat-form-field" [style.width.px]=300>
+                    <mat-label>Name</mat-label>
+                    <input matInput type="text" placeholder="What should we call you?" name="name" [(ngModel)]="user.name" #name="ngModel" required>
+                    <mat-error *ngIf="name.errors?.required">Name is required</mat-error>
+                </mat-form-field>
+            </p>
+
+        </mat-dialog-content>
+
+        <mat-dialog-actions>
+            <button mat-raised-button type="submit" color="primary" class="signup-btn"
+            [style.width.px]=200 [disabled]="loginForm.form.invalid">SIGN UP</button>
+            <mat-error *ngIf="errMsg" class="error-message">{{errMsg}}</mat-error>
+        </mat-dialog-actions>
+
+
+    </form>
+    </div>
+
+</div>

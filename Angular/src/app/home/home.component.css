@@ -31,6 +31,7 @@
 
 h1.example-app-name {
   margin-left: 2px;
+  cursor: pointer;
 }
 
 .example-sidenav-container {
@@ -46,7 +47,36 @@ h1.example-app-name {
 }
 
 .logo {
-  margin-left: 16px;
+  /* margin-left: 8px; */
   background-image: url(/assets/images/music-512.png);
   background-size: cover;
+}
+
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.mat-nav-list{
+    margin-top: 56px;
+}
+
+.mat-sidenav-icon{
+    margin-right: 8px;
+}
+
+.mat-sidenav-list-item{
+    vertical-align: middle;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.toolbar-button{
+    margin-right: 16px;
 }
