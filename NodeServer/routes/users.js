@@ -4,20 +4,38 @@ const bodyParser = require('body-parser');
 var passport = require('passport');
 var authenticate = require('../authenticate');
 
+const cors = require('../cors');
+
 var User = require('../models/user');
 
 router.use(bodyParser.json());
 
-/* GET users listing. */
-router.post('/signup', function(req, res, next){
-    User.register(new User({username: req.body.email,
-        email: req.body.email,
-        name: req.body.name
-    }),
+router.options('*', cors.corsWithOptions, (req, res) => { res.sendStatus(200); });
+
+router.get('/', cors.corsWithOptions, authenticate.verifyUser, function(req, res, next) {
+    // console.log(req.query);
+    User.findOne(req.query)
+    .then((user) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(user);
+    }, (err) => {
+        next(err);
+    })
+    .catch((err) => {
+        next(err);
+    });
+});
+
+router
+.post('/signup', cors.corsWithOptions, function(req, res, next){
+    User.register(new User({username: req.body.username}),
     req.body.password, (err, user) => {
         if(err){
+            // User already exists
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
+            err.message = "* Username already exists"
             res.json({err: err});
         }
         else{
@@ -29,14 +47,15 @@ router.post('/signup', function(req, res, next){
                 user.email = req.body.email;
             }
 
-
             user.save((err, user) => {
+
                 if(err){
                     res.statusCode = 500;
                     res.setHeader('Content-Type', 'application/json');
                     res.json({err: err});
                     return;
                 }
+
                 passport.authenticate('local')(req, res, () => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
@@ -47,7 +66,7 @@ router.post('/signup', function(req, res, next){
     });
 });
 
-router.post('/login', function(req, res, next){
+router.post('/login', cors.corsWithOptions, function(req, res, next){
     passport.authenticate('local', (err, user, info) => {
         if(err){
             return next(err);
@@ -86,6 +105,25 @@ router.post('/login', function(req, res, next){
         });
 
     }) (req, res, next);
+});
+
+router.get('/checkJWTToken', cors.corsWithOptions, (req, res) => {
+    passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        if(err){
+            return next(err);
+        }
+
+        if(!user){
+            res.statusCode = 401;
+            res.setHeader('Content-Type', 'application/json');
+            return res.json({status: 'JWT invalid!', success: false, err: info});
+        }
+        else{
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            return res.json({status: 'JWT valid!', success: true, user: user});
+        }
+    }) (req, res);
 });
 
 module.exports = router;

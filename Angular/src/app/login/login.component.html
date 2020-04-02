@@ -13,7 +13,7 @@
 
     <div class="parent">
     <form class="form" novalidate #loginForm="ngForm" (ngSubmit)="onSubmit()">
-        <h3 class="form-label">Sign up with your email address</h3>
+        <h3 class="form-label">Log in with your email address</h3>
 
         <mat-dialog-content>
             <p>
@@ -32,26 +32,11 @@
                 </mat-form-field>
             </p>
 
-            <p>
-                <mat-form-field appearance="outline" class="mat-form-field" [style.width.px]=300>
-                    <mat-label>Confirm Password</mat-label>
-                    <input matInput [disabled]="loading" placeholder="Confirm your password" type="password" name="confirm_password" [(ngModel)]="user.confirm_password" #confirm_password="ngModel" required>
-                </mat-form-field>
-            </p>
-
-            <p>
-                <mat-form-field appearance="outline" class="mat-form-field" [style.width.px]=300>
-                    <mat-label>Name</mat-label>
-                    <input matInput [disabled]="loading" type="text" placeholder="What should we call you?" name="name" [(ngModel)]="user.name" #name="ngModel" required>
-                    <mat-error *ngIf="name.errors?.required">Name is required</mat-error>
-                </mat-form-field>
-            </p>
-
         </mat-dialog-content>
 
         <mat-dialog-actions>
             <button mat-raised-button type="submit" color="primary" class="signup-btn"
-            [style.width.px]=200 [disabled]="loginForm.form.invalid || loading">SIGN UP</button>
+            [style.width.px]=200 [disabled]="loginForm.form.invalid || loading">LOG IN</button>
             <mat-spinner *ngIf="loading" class="example-margin"></mat-spinner>
             <mat-error *ngIf="errMsg" class="error-message">{{errMsg}}</mat-error>
         </mat-dialog-actions>

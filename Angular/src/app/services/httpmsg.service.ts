@@ -14,9 +14,10 @@ export class ProcessHTTPMsgService {
     let errMsg: string;
 
     if (error.error instanceof ErrorEvent) {
-      errMsg = error.error.message;
-    } else {
-      errMsg = `${error.status} - ${error.statusText || ''} ${error.message}`;
+        errMsg = error.error.message;
+    }
+    else {
+        errMsg = `${error.error.err.message}`
     }
 
     return throwError(errMsg);

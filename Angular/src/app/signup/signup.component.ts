@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { Router } from '@angular/router';
 
 import {FormControl, Validators} from '@angular/forms';
 
@@ -20,11 +21,13 @@ export class SignupComponent implements OnInit {
     }
 
     errMsg: string;
+    loading: Boolean = false;
 
     constructor(
         changeDetectorRef: ChangeDetectorRef,
         media: MediaMatcher,
-        private authService: AuthService
+        private authService: AuthService,
+        private router: Router
     ){
         this.mobileQuery = media.matchMedia('(max-width: 600px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -43,22 +46,43 @@ export class SignupComponent implements OnInit {
     }
 
     onSubmit() {
+        this.loading = true;
         // console.log("User: ", this.user);
         if(this.validate()){
             // user signup
             this.authService.signUp(this.user)
             .subscribe(res => {
                 if (res.success) {
-                    console.log(res);
+
+                    // login user
+                    this.authService.logIn(this.user)
+                    .subscribe(res => {
+                        if (res.success) {
+                            // Redirect if login successful
+                            this.router.navigate(['/']);
+                        } else {
+                            console.log(res);
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                        this.errMsg = error;
+                    });
+
+                    // Redirect if signup successful but login not successful
+                    // this.router.navigate(['/']);
+
                 } else {
-                    console.log(res);
+                    // console.log(res);
                 }
             },
             error => {
-                console.log(error);
                 this.errMsg = error;
+                // console.log(error);
             });
         }
+
+        this.loading = false;
     }
 
     validate(){

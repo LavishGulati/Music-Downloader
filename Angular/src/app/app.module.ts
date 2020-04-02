@@ -25,19 +25,24 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { HttpClientModule } from '@angular/common/http';
 
 import { ProcessHTTPMsgService } from './services/httpmsg.service';
 import { AuthService } from './services/auth.service';
+import { AuthInterceptor, UnauthorizedInterceptor } from './services/auth.interceptor';
 import { baseURL } from './shared/baseurl';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
         SignupComponent,
-        FooterComponent
+        FooterComponent,
+        LoginComponent
     ],
     imports: [
         MatDatepickerModule,
@@ -59,6 +64,7 @@ import { baseURL } from './shared/baseurl';
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        MatProgressSpinnerModule
     ],
     exports: [
         MatDatepickerModule,
@@ -77,12 +83,23 @@ import { baseURL } from './shared/baseurl';
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        MatProgressSpinnerModule
     ],
     providers: [
         Title,
         ProcessHTTPMsgService,
         AuthService,
         {provide: 'baseURL', useValue: baseURL},
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: UnauthorizedInterceptor,
+            multi: true
+        }
     ],
     bootstrap: [AppComponent]
 })

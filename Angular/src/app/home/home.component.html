@@ -8,8 +8,11 @@
         <h1 class="example-app-name" *ngIf="!mobileQuery.matches" routerLink="">Versa</h1>
 
         <span class="example-spacer"></span>
-        <button mat-raised-button class="toolbar-button" routerLink="/signup">SIGN UP</button>
-        <button mat-raised-button color="primary" class="toolbar-button">LOG IN</button>
+        <!-- <p>{{username}}</p> -->
+        <div *ngIf="user">Welcome, {{user.name}}</div>
+        <button mat-raised-button *ngIf="!isAuthenticated" class="toolbar-button" routerLink="/signup">SIGN UP</button>
+        <button mat-raised-button *ngIf="isAuthenticated" class="toolbar-button" (click)="logout()">LOG OUT</button>
+        <button mat-raised-button *ngIf="!isAuthenticated" color="primary" class="toolbar-button" routerLink="/login">LOG IN</button>
     </mat-toolbar>
 
     <mat-sidenav-container class="example-sidenav-container">
