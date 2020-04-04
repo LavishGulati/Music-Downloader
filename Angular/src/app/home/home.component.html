@@ -9,7 +9,7 @@
 
         <span class="example-spacer"></span>
         <!-- <p>{{username}}</p> -->
-        <div *ngIf="user">Welcome, {{user.name}}</div>
+        <div *ngIf="user && !mobileQuery.matches">Welcome, {{user.name}}</div>
         <button mat-raised-button *ngIf="!isAuthenticated" class="toolbar-button" routerLink="/signup">SIGN UP</button>
         <button mat-raised-button *ngIf="isAuthenticated" class="toolbar-button" (click)="logout()">LOG OUT</button>
         <button mat-raised-button *ngIf="!isAuthenticated" color="primary" class="toolbar-button" routerLink="/login">LOG IN</button>
@@ -26,7 +26,33 @@
 
 
         <mat-sidenav-content class="mat-sidenav-content">
+            <div class="center">
+                <form novalidate>
+                    <h3>Search for a song and watch the magic..</h3>
 
+                    <p>
+                    <mat-dialog-content>
+
+                            <mat-form-field appearance="outline" *ngIf="!mobileQuery.matches" class="search-input">
+                                <mat-label>Enter the song</mat-label>
+                                <input matInput>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" *ngIf="mobileQuery.matches" class="search-input-mobile">
+                                <mat-label>Enter the song</mat-label>
+                                <input matInput>
+                            </mat-form-field>
+
+                    </mat-dialog-content>
+
+                    <mat-dialog-actions>
+                        <button mat-raised-button color="primary" *ngIf="!mobileQuery.matches" class="search-btn">Search..</button>
+                        <button mat-raised-button color="primary" *ngIf="mobileQuery.matches" class="search-btn-mobile">Search..</button>
+                    </mat-dialog-actions>
+                    </p>
+
+                </form>
+            </div>
         </mat-sidenav-content>
 
     </mat-sidenav-container>

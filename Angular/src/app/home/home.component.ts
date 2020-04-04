@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
     errMsg: string = '';
     user: User;
 
+    loading: boolean = false;
+
     constructor(
         changeDetectorRef: ChangeDetectorRef,
         media: MediaMatcher,

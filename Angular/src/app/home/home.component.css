@@ -81,3 +81,37 @@ h1.example-app-name {
     margin-right: 16px;
     margin-left: 16px;
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+.center *{
+    align-self: center;
+}
+
+.search-input{
+    width: 40vw;
+    margin-right: 16px;
+}
+
+.search-btn{
+    height: 3.25rem;
+    width: 10vw;
+    padding-top: 8px;
+    font-size: 16px;
+}
+
+.search-input-mobile{
+    width: 55vw;
+    margin-right: 16px;
+}
+
+.search-btn-mobile{
+    height: 3rem;
+    width: 25vw;
+    padding-top: 8px;
+    font-size: 16px;
+}
