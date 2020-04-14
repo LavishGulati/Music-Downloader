@@ -27,28 +27,37 @@
 
         <mat-sidenav-content class="mat-sidenav-content">
             <div class="center">
-                <form novalidate>
-                    <h3>Search for a song and watch the magic..</h3>
+                <form novalidate *ngIf="!mobileQuery.matches" #downloadForm="ngForm" (ngSubmit)="onSubmit()">
+                    <h3>{{form_msg}}</h3>
 
                     <p>
                     <mat-dialog-content>
 
-                            <mat-form-field appearance="outline" *ngIf="!mobileQuery.matches" class="search-input">
+                            <mat-form-field appearance="outline" class="search-input">
                                 <mat-label>Enter the song</mat-label>
-                                <input matInput>
+                                <input matInput name="name" [(ngModel)]="song.name" #name="ngModel" required>
+                                <mat-error *ngIf="name.errors?.required || errMsg">Name of the song is required</mat-error>
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" *ngIf="mobileQuery.matches" class="search-input-mobile">
-                                <mat-label>Enter the song</mat-label>
-                                <input matInput>
+                            <mat-form-field appearance="outline" class="singer-input">
+                                <mat-label>Album</mat-label>
+                                <input matInput name="album" [(ngModel)]="song.album" #album="ngModel">
+                                <mat-hint>Enter the musician, band, album or movie to make the magic more powerful</mat-hint>
                             </mat-form-field>
 
                     </mat-dialog-content>
 
                     <mat-dialog-actions>
-                        <button mat-raised-button color="primary" *ngIf="!mobileQuery.matches" class="search-btn">Search..</button>
-                        <button mat-raised-button color="primary" *ngIf="mobileQuery.matches" class="search-btn-mobile">Search..</button>
+                        <button mat-raised-button type="submit" color="primary" class="search-btn">{{btn_name}}</button>
                     </mat-dialog-actions>
+                    </p>
+
+                    <p>
+                        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" name="format" [(ngModel)]="song.format" #format="ngModel" required>
+                            <mat-radio-button class="example-radio-button" *ngFor="let format of formats" [value]="format">
+                                {{format}}
+                            </mat-radio-button>
+                        </mat-radio-group>
                     </p>
 
                 </form>

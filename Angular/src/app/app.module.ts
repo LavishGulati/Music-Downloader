@@ -26,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatRadioModule} from '@angular/material/radio';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -35,6 +36,8 @@ import { AuthInterceptor, UnauthorizedInterceptor } from './services/auth.interc
 import { baseURL } from './shared/baseurl';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
+
+import { SongService } from './services/song.service';
 
 @NgModule({
     declarations: [
@@ -64,7 +67,8 @@ import { LoginComponent } from './login/login.component';
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatRadioModule
     ],
     exports: [
         MatDatepickerModule,
@@ -83,7 +87,8 @@ import { LoginComponent } from './login/login.component';
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatRadioModule
     ],
     providers: [
         Title,
@@ -99,7 +104,8 @@ import { LoginComponent } from './login/login.component';
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedInterceptor,
             multi: true
-        }
+        },
+        SongService
     ],
     bootstrap: [AppComponent]
 })

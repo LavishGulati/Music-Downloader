@@ -3,8 +3,11 @@ import { MediaMatcher } from '@angular/cdk/layout';
 
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { saveAs } from "file-saver";
 
 import { User } from '../shared/user';
+
+import { SongService } from '../services/song.service';
 
 @Component({
   selector: 'app-home',
@@ -19,13 +22,31 @@ export class HomeComponent implements OnInit {
     errMsg: string = '';
     user: User;
 
+    btn_name = "Search..";
+    form_msg = "Search for a song and watch the magic..";
+
     loading: boolean = false;
+
+    chosenFormat: string = 'mp3';
+
+    formats: string[] = [
+        'mp3',
+        'mp4',
+        'wav'
+    ];
+
+    song = {
+        name: '',
+        album: '',
+        format: 'mp3'
+    }
 
     constructor(
         changeDetectorRef: ChangeDetectorRef,
         media: MediaMatcher,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private songService: SongService
     ){
         this.mobileQuery = media.matchMedia('(max-width: 600px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -76,5 +97,44 @@ export class HomeComponent implements OnInit {
     logout(){
         this.authService.logOut();
         this.user = null;
+    }
+
+    onSubmit(){
+        // console.log(this.song);
+        this.loading = true;
+        if(this.validate()){
+            this.songService.postSongRequest(this.song)
+            .subscribe((res) => {
+                console.log(res);
+                if(res.present){
+                    this.songService.getSong(res.status).subscribe((res) => {
+                        window.open(window.URL.createObjectURL(res));
+                    });
+                    this.btn_name = "Search..";
+                    this.form_msg = "Search for a song and watch the magic..";
+                }
+                else{
+                    this.btn_name = "Open";
+                    this.form_msg = "Your song is ready! Click on Open to listen..";
+                }
+
+            },
+            error => {
+                console.log(error);
+            });
+        };
+    }
+
+    validate(){
+        this.song.name = this.song.name.replace(/^\s+/, '').replace(/\s+$/, '');
+        if(this.song.name == ''){
+            this.errMsg = 'Name of the song is required';
+            return false;
+        }
+        else{
+            this.errMsg = '';
+        }
+
+        return true;
     }
 }

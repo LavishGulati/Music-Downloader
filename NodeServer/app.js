@@ -16,6 +16,8 @@ var songsRouter = require('./routes/songs');
 const url = config.mongoUrl;
 const connect = mongoose.connect(url);
 
+const cors = require('./cors');
+
 connect.then((db) => {
     console.log('Connected correctly to server');
 }, (err) => {
@@ -32,7 +34,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/songs', cors.corsWithOptions, express.static(path.join(__dirname, 'public', 'songs')));
 
 app.use(passport.initialize());
 

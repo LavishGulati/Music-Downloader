@@ -2,10 +2,18 @@ var webdriver = require('selenium-webdriver')
 By = webdriver.By,
 until = webdriver.until;
 
+let chrome = require('selenium-webdriver/chrome');
+var shell = require('shelljs');
+
 class Downloader {
 
-    constructor(){
-        this.driver = new webdriver.Builder().forBrowser('chrome').build();
+    constructor(dirname){
+
+        shell.mkdir('-p', '/home/lavishgulati/Github/Music-Downloader/NodeServer/public/songs/'+dirname);
+
+        this.driver = new webdriver.Builder().forBrowser('chrome').setChromeOptions(new chrome.Options().setUserPreferences({
+            "download.default_directory": '/home/lavishgulati/Github/Music-Downloader/NodeServer/public/songs/'+dirname+'/'
+        })).build();
     }
 
     getGoogleSearchURLs(){
@@ -37,39 +45,72 @@ class Downloader {
     }
 
     downloadFromLink(links, id){
-        if(id >= links.length){
-            return;
+        if(links.length == 0){
+            throw "Download links not available on this site";
+            return Promise.resolve({
+
+            });
         }
 
-        this.driver.get(links[id]).then(() => {
+        if(id >= links.length){
+            throw "All download links exhausted on this site";
+            return Promise.resolve({
 
-        })
-        .catch(() => {
-            this.downloadFromLink(links, id+1);
-        })
+            });
+        }
+
+        return Promise.resolve({
+            'exitcode': 1,
+            'success': true,
+            'link': links[id]
+        });
+
+        // return this.driver.get(links[id]).then(() => {
+        //     console.log("Done");
+        //     return Promise.resolve({
+        //         'exit-code': 1,
+        //         'success': true
+        //     });
+        // })
+        // .catch(() => {
+        //     return this.downloadFromLink(links, id+1).then((res) => {
+        //         return res;
+        //     });
+        // })
     }
 
     parseLinksFromHref(hrefs, id){
         if(id >= hrefs.length){
-            return;
+            return Promise.resolve({
+                'exitcode': -1,
+                'success': 'false'
+            });
         }
 
-        this.searchInPage(hrefs[id]).then((links) => {
-            this.downloadFromLink(links, 0);
+        return this.searchInPage(hrefs[id]).then((links) => {
+            return this.downloadFromLink(links, 0).then((res) => {
+                // console.log(res);
+                return res;
+            });
         })
         .catch(() => {
-            this.parseLinksFromHref(hrefs, id+1);
+            return this.parseLinksFromHref(hrefs, id+1).then((res) => {
+                return res;
+            });
         });
     }
 
     downloadSong(name, album, format){
-        this.driver.get('http://www.google.com').then(() => {
-            this.driver.findElement(By.name('q')).then((element) => {
-                element.sendKeys('download ', name, ' ', album, ' ', format, '\n').then(() => {
+        return this.driver.get('http://www.google.com').then(() => {
+            return this.driver.findElement(By.name('q')).then((element) => {
+                return element.sendKeys('download ', name, ' ', album, ' ', format, '\n').then(() => {
                     // console.log("Element found");
-                    this.getGoogleSearchURLs().then((hrefs) => {
+                    return this.getGoogleSearchURLs().then((hrefs) => {
                         // console.log('got hrefs: ', hrefs.length, hrefs);
-                        this.parseLinksFromHref(hrefs, 0);
+                        return this.parseLinksFromHref(hrefs, 0).then((res) => {
+                            // console.log(res);
+                            return res;
+                        });
 
                     })
                     .catch((err) => {
@@ -86,7 +127,10 @@ class Downloader {
             console.log("Driver not opened");
             console.log(err);
         });
+    }
 
+    destroy(){
+        this.driver.quit();
     }
 }
 
