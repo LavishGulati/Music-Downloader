@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
     user: User;
 
     btn_name = "Search..";
-    form_msg = "Search for a song and watch the magic..";
+    form_msg = "Search for a song and wait for the magic..";
 
     loading: boolean = false;
 
@@ -111,7 +111,7 @@ export class HomeComponent implements OnInit {
                         window.open(window.URL.createObjectURL(res));
                     });
                     this.btn_name = "Search..";
-                    this.form_msg = "Search for a song and watch the magic..";
+                    this.form_msg = "Search for a song and wait for the magic..";
                 }
                 else{
                     this.btn_name = "Open";
@@ -123,6 +123,7 @@ export class HomeComponent implements OnInit {
                 console.log(error);
             });
         };
+        this.loading = false;
     }
 
     validate(){

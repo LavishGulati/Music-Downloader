@@ -24,6 +24,16 @@ router.post('/', cors.corsWithOptions, function(req, res, next){
     var dirname = name.replace(/\s/g, '')+'_'+album.replace(/\s/g, '')+'_'+format.replace(/\s/g, '');
     var fullpathname = '/home/lavishgulati/Github/Music-Downloader/NodeServer/public/songs/';
 
+    var song = {
+        'name': '',
+        'album': '',
+        'format': '',
+        'url': ''
+    };
+    song.name = name;
+    song.album = album;
+    song.format = format;
+
     if (fs.existsSync(fullpathname+dirname)) {
 
         fs.readdir(fullpathname+dirname, function (err, files) {
@@ -65,10 +75,21 @@ router.post('/', cors.corsWithOptions, function(req, res, next){
                                     return console.log('Unable to scan directory: ' + err);
                                 }
 
-                                res.statusCode = 200;
-                                res.setHeader('Content-Type', 'application/json');
-                                res.json({success: true, present: false, status: dirname+'/'+files[0]});
+                                song.url = dirname+'/'+files[0];
 
+                                Song.create(song)
+                                .then((song) => {
+                                    // console.log('Dish Created ', dish);
+                                    res.statusCode = 200;
+                                    res.setHeader('Content-Type', 'application/json');
+                                    res.json({success: true, present: false, status: dirname+'/'+files[0]});
+
+                                }, (err) => {
+                                    next(err);
+                                })
+                                .catch((err) => {
+                                    next(err);
+                                });
                             });
 
                         }

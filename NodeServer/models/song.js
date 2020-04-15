@@ -13,6 +13,10 @@ var Song = new Schema({
     format: {
         type: String,
         default: ''
+    },
+    url: {
+        type: String,
+        default: ''
     }
 });
 
